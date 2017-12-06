@@ -10,7 +10,7 @@ public class ShortestRunTimeFinder {
 
 	private final List<Vertex> vertexes;
 	private final List<Edge> edges;
-	
+
 	private List<Vertex> settled;
 	private List<Vertex> unSettled;
 	

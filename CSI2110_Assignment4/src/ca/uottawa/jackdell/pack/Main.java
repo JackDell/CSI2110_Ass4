@@ -22,8 +22,8 @@ public class Main {
 	public static void main(String[] args) {
 		vertexes = new ArrayList<>();
 		edges = new ArrayList<>();
-		readMetro("/Users/Jack/School/Workspace/CSI2110/CSI2110_Ass4/CSI2110_Assignment4/src/ca/uottawa/jackdell/pack/metro.txt");
-	
+		readMetro("/Users/Jack/workspace/CSI2110_Ass4/CSI2110_Assignment4/src/ca/uottawa/jackdell/pack/metro.txt");
+		metroTest();
 	}
 
 	// Methods
@@ -79,5 +79,14 @@ public class Main {
 		}
 		
 		return null;
+	}
+	
+	public static void metroTest() {
+		ParisMetro metro = new ParisMetro(vertexes, edges);
+		ShortestRunTimeFinder srtf = new ShortestRunTimeFinder(metro);
+		srtf.init(vertexes.get(0));
+		List<Vertex> path = srtf.getPath(vertexes.get(30));
+		
+		System.out.println(path.toString());
 	}
 }
