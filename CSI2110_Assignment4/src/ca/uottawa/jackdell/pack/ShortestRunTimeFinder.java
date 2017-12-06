@@ -31,7 +31,10 @@ public class ShortestRunTimeFinder {
 		this.distance.put(source, 0);
 		unSettled.add(source);
 		while(unSettled.size() != 0) {
-			
+			Vertex node = getMinimun(unSettled);
+			settled.add(node);
+			unSettled.remove(node);
+			this.findMinDistances(node);
 		}
 		
 	}
