@@ -81,11 +81,12 @@ public class ParisMetro {
 	
 	public List<Integer> findShortestLine(int sourceId, int destinationId) {
 		
-		Map<Integer, Integer> infoMap = new HashMap<>();
-		
+		Map<Edge, Edge> matrix = new HashMap<>();
 		Queue<Vertex> vertexesToVisit = new PriorityQueue<>();
 		Object[] keys = metroConnections.keySet().toArray();
 		vertexesToVisit.add((Vertex) keys[sourceId]);
+		
+		Vertex target = (Vertex) keys[destinationId];
 		
 		while(!vertexesToVisit.isEmpty()) {
 			Vertex source = vertexesToVisit.remove();
