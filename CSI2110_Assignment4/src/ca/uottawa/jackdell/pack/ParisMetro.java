@@ -80,19 +80,43 @@ public class ParisMetro {
 	}
 	
 	public List<Integer> findShortestLine(int sourceId, int destinationId) {
+		List<Integer> distance = new ArrayList<>();
+		List<Boolean> visited = new ArrayList<>();
+		Queue<Vertex> vertexQueue = new PriorityQueue<>();
+		vertexQueue.add(getVertexById(sourceId));
 		
-		Map<Integer, Integer> infoMap = new HashMap<>();
+		// Filling the distance list with max integer values to begin with
+		for(int i = 0; i < numVertexes; i++) {
+			distance.add(i, Integer.MAX_VALUE);
+		}
+		distance.set(sourceId, 0);
 		
-		Queue<Vertex> vertexesToVisit = new PriorityQueue<>();
-		Object[] keys = metroConnections.keySet().toArray();
-		vertexesToVisit.add((Vertex) keys[sourceId]);
 		
-		while(!vertexesToVisit.isEmpty()) {
-			Vertex source = vertexesToVisit.remove();
+		while(visited.size() < numVertexes) {
+			Vertex node = vertexQueue.remove();
 			
-			for(Edge e : metroConnections.get(source)) {
-				vertexesToVisit.add(e.getDestination());
+			boolean firstLoop = true;
+			Edge minEdge;
+			
+			// Finding the next station with the smallest travel time
+			for(Edge e : metroConnections.get(node)) {
+				if(firstLoop) {
+					minEdge = e;
+					firstLoop = false;
+					return;
+				}
+				if(e.getTravelTime() < minEdge.getTravelTime()) {
+					min = e;
+				}
 			}
+			
+			
+		}
+	}
+	
+	private static Vertex getVertexById(int id) {
+		for(Vertex v : metroConnections.keySet()) {
+			if(v.getId() == id) return v;
 		}
 		
 		return null;
