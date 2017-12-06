@@ -92,6 +92,7 @@ public class Main {
 		
 		// Creating a list to hold all the non-duplicate stations
 		List<Vertex> pathWithoutDuplicates = new ArrayList<>();
+		List<Edge> pathInEdges = new ArrayList<>();
 		// Adding the starting element to the list, it will never qualify as a duplicate in the following loop
 		pathWithoutDuplicates.add(vertexes.get(0));
 		
@@ -108,11 +109,35 @@ public class Main {
 			
 			// Adding the non-duplicate station to the path
 			pathWithoutDuplicates.add(path.get(i));
+			pathInEdges.add(getEdge(path.get(i - 1).getId(), path.get(i).getId()));
 		}
 		
 		// Printing path to console
 		for(Vertex v : pathWithoutDuplicates) {
 			System.out.println(v.getId() + ", " + v.getStationName());
 		}
+		
+		int i = 1;
+		int totalTravelTime = 0;
+		for(Edge e : pathInEdges) {
+			System.out.println(i++ + ". (" + e.getSource().getId() + ": " + e.getSource().getStationName() + 
+					", " + e.getDestination().getId() + ": " + e.getDestination().getStationName() + 
+					", Travel Time: " + e.getTravelTime() + ")");
+			totalTravelTime += e.getTravelTime();
+		}
+		System.out.println("Total travel time from " + vertexes.get(0).getStationName() + " to " + vertexes.get(30).getStationName() + " is: " + totalTravelTime);
+	}
+	
+	private static Edge getEdge(int sourceId, int destinationId) {
+		Vertex source = getVertexById(sourceId);
+		Vertex destination = getVertexById(destinationId);
+		
+		for(Edge e : edges) {
+			if(e.getSource().equals(source) && e.getDestination().equals(destination)) {
+				return e;
+			}
+		}
+		
+		return null;
 	}
 }
