@@ -77,16 +77,42 @@ public class Main {
 		for(Vertex v : vertexes) {
 			if(v.getId() == id) return v;
 		}
-		
 		return null;
 	}
 	
+	/**
+	 * Function to test the functionallity of the ParisMetro class and ShortestRouteFinder class
+	 */
 	public static void metroTest() {
 		ParisMetro metro = new ParisMetro(vertexes, edges);
 		ShortestRunTimeFinder srtf = new ShortestRunTimeFinder(metro);
 		srtf.init(vertexes.get(0));
+		// Getting the shortest path, but this path will contain duplicate stations
 		List<Vertex> path = srtf.getPath(vertexes.get(30));
 		
-		System.out.println(path.toString());
+		// Creating a list to hold all the non-duplicate stations
+		List<Vertex> pathWithoutDuplicates = new ArrayList<>();
+		// Adding the starting element to the list, it will never qualify as a duplicate in the following loop
+		pathWithoutDuplicates.add(vertexes.get(0));
+		
+		for(int i = 0; i < path.size(); i++) {
+			// First item is already added, continue
+			if(i == 0) {
+				continue;
+			}
+			
+			// If the station name is the same as the one before it, do not add it to the list
+			if(path.get(i).getStationName().equals(path.get(i - 1).getStationName())) {
+				continue;
+			}
+			
+			// Adding the non-duplicate station to the path
+			pathWithoutDuplicates.add(path.get(i));
+		}
+		
+		// Printing path to console
+		for(Vertex v : pathWithoutDuplicates) {
+			System.out.println(v.getId() + ", " + v.getStationName());
+		}
 	}
 }
