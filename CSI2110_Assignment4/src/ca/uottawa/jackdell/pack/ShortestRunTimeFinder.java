@@ -8,7 +8,6 @@ import java.util.Map;
 
 public class ShortestRunTimeFinder {
 
-	private final List<Vertex> vertexes;
 	private final List<Edge> edges;
 
 	private List<Vertex> settled;
@@ -18,7 +17,6 @@ public class ShortestRunTimeFinder {
 	private Map<Vertex, Integer> distance;
 	
 	public ShortestRunTimeFinder(ParisMetro metro) {
-		this.vertexes = new ArrayList<Vertex>(metro.getVertexes());
 		this.edges = new ArrayList<Edge>(metro.getEdges());
 	}
 	
