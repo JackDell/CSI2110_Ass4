@@ -23,8 +23,16 @@ public class Main {
 		vertexes = new ArrayList<>();
 		edges = new ArrayList<>();
 		readMetro("/Users/Jack/workspace/CSI2110_Ass4/CSI2110_Assignment4/src/ca/uottawa/jackdell/pack/metro.txt");
-		metroTest();
-		sameLine(vertexes.get(0));
+		
+		if(args.length == 1) {
+			sameLine(getVertexById(Integer.parseInt(args[0])));
+		}
+		else if(args.length == 2) {
+			shortestPath(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
+		}
+		else if(args.length == 3) {
+			System.out.println("Could not figure out how to implement, sorry :(");
+		}
 	}
 
 	// Methods
@@ -81,61 +89,6 @@ public class Main {
 		return null;
 	}
 	
-	/**
-	 * Function to test the functionallity of the ParisMetro class and ShortestRouteFinder class
-	 */
-	public static void metroTest() {
-		ParisMetro metro = new ParisMetro(vertexes, edges);
-		ShortestRunTimeFinder srtf = new ShortestRunTimeFinder(metro);
-		srtf.init(vertexes.get(0));
-		// Getting the shortest path, but this path will contain duplicate stations
-		List<Vertex> path = srtf.getPath(vertexes.get(30));
-		
-		// Creating a list to hold all the non-duplicate stations
-		List<Vertex> pathWithoutDuplicates = new ArrayList<>();
-		List<Edge> pathInEdges = new ArrayList<>();
-		// Adding the starting element to the list, it will never qualify as a duplicate in the following loop
-		pathWithoutDuplicates.add(vertexes.get(0));
-		
-		for(int i = 0; i < path.size(); i++) {
-			// First item is already added, continue
-			if(i == 0) {
-				continue;
-			}
-			
-			// If the station name is the same as the one before it, do not add it to the list
-			if(path.get(i).getStationName().equals(path.get(i - 1).getStationName())) {
-				continue;
-			}
-			
-			// Adding the non-duplicate station to the path
-			pathWithoutDuplicates.add(path.get(i));
-			pathInEdges.add(getEdge(path.get(i - 1).getId(), path.get(i).getId()));
-		}
-		
-		// Printing path to console
-		for(Vertex v : pathWithoutDuplicates) {
-			System.out.println(v.getId() + ", " + v.getStationName());
-		}
-		
-		int i = 1;
-		int totalTravelTime = 0;
-		for(Edge e : pathInEdges) {
-			System.out.println(i++ + ". (" + e.getSource().getId() + ": " + e.getSource().getStationName() + 
-					", " + e.getDestination().getId() + ": " + e.getDestination().getStationName() + 
-					", Travel Time: " + e.getTravelTime() + ")");
-			
-			if(e.getTravelTime() == -1) {
-				totalTravelTime += 90;
-			}
-			else {
-				totalTravelTime += e.getTravelTime();
-			}
-			
-		}
-		System.out.println("Total travel time from " + vertexes.get(0).getStationName() + " to " + vertexes.get(30).getStationName() + " is: " + totalTravelTime);
-	}
-	
 	private static Edge getEdge(int sourceId, int destinationId) {
 		Vertex source = getVertexById(sourceId);
 		Vertex destination = getVertexById(destinationId);
@@ -178,4 +131,44 @@ public class Main {
 		}
 		return "";
 	}
+    
+    public static void shortestPath(int sourceId, int destinationId) {
+    	Vertex source = getVertexById(sourceId);
+    	Vertex destination = getVertexById(destinationId);
+    	
+    	ParisMetro metro = new ParisMetro(vertexes, edges);
+		ShortestRunTimeFinder srtf = new ShortestRunTimeFinder(metro);
+		srtf.init(source);
+		// Getting the shortest path, but this path will contain duplicate stations
+		List<Vertex> path = srtf.getPath(destination);
+		List<Edge> pathInEdges = new ArrayList<>();
+		
+		for(int i = 0; i < path.size(); i++) {
+			// First item is already added, continue
+			if(i == 0) {
+				continue;
+			}
+			
+			// If the station name is the same as the one before it, do not add it to the list
+			if(path.get(i).getStationName().equals(path.get(i - 1).getStationName())) {
+				continue;
+			}
+			
+			// Adding the non-duplicate station to the path
+			pathInEdges.add(getEdge(path.get(i - 1).getId(), path.get(i).getId()));
+		}
+		
+		int i = 1;
+		int totalTravelTime = 0;
+		for(Edge e : pathInEdges) {
+			int travelTime = e.getTravelTime();
+			if(travelTime == -1) travelTime = 90;
+			
+			System.out.println(i++ + ". (" + e.getSource().getId() + ": " + e.getSource().getStationName() + 
+					", " + e.getDestination().getId() + ": " + e.getDestination().getStationName() + 
+					", Travel Time: " + travelTime + ")");
+			totalTravelTime += travelTime;
+		}
+		System.out.println("Total travel time from " + source.getStationName() + " to " + destination.getStationName() + " is: " + totalTravelTime);
+    }
 }
