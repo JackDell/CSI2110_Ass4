@@ -24,6 +24,7 @@ public class Main {
 		edges = new ArrayList<>();
 		readMetro("/Users/Jack/workspace/CSI2110_Ass4/CSI2110_Assignment4/src/ca/uottawa/jackdell/pack/metro.txt");
 		metroTest();
+		sameLine(vertexes.get(0));
 	}
 
 	// Methods
@@ -123,7 +124,14 @@ public class Main {
 			System.out.println(i++ + ". (" + e.getSource().getId() + ": " + e.getSource().getStationName() + 
 					", " + e.getDestination().getId() + ": " + e.getDestination().getStationName() + 
 					", Travel Time: " + e.getTravelTime() + ")");
-			totalTravelTime += e.getTravelTime();
+			
+			if(e.getTravelTime() == -1) {
+				totalTravelTime += 90;
+			}
+			else {
+				totalTravelTime += e.getTravelTime();
+			}
+			
 		}
 		System.out.println("Total travel time from " + vertexes.get(0).getStationName() + " to " + vertexes.get(30).getStationName() + " is: " + totalTravelTime);
 	}
@@ -139,5 +147,35 @@ public class Main {
 		}
 		
 		return null;
+	}
+	
+	private static List<Edge> getEdges(Vertex source) {
+		List<Edge> returnList = new ArrayList<>();
+		
+		for(Edge e : edges) {
+			if(e.getSource().equals(source)) returnList.add(e);
+		}
+		
+		return returnList;
+	}
+	
+	public static void sameLine (Vertex currStation){
+    	System.out.print(currStation.getId() + " ");
+    	sameLine(currStation, currStation, currStation.getId() + ", ");
+    }
+    private static String sameLine(Vertex currStation, Vertex prevStation, String list){
+    	
+    	ArrayList<Edge> currentEdges = (ArrayList<Edge>) getEdges(currStation);
+    	
+		if (currentEdges.size() == 1 && !(prevStation.equals(currStation))) return list;
+		
+		for(int i=0; i < currentEdges.size(); i++){
+			if(!(currentEdges.get(i).getTravelTime() == -1 || currentEdges.get(i).getDestination().equals(prevStation))){
+				list += currentEdges.get(i).getDestination().getStationName() + ", ";
+				System.out.print(currentEdges.get(i).getDestination().getId() + " ");
+				sameLine(currentEdges.get(i).getDestination(), currStation, list);
+			}
+		}
+		return "";
 	}
 }
